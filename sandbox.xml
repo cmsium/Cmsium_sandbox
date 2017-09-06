@@ -1,0 +1,13 @@
+<manifest>
+    <service_name>Cmsium_sandbox</service_name>
+    <methods>
+        <method>
+            <resource>/</resource>
+            <auth>all</auth>
+            <method>
+                <resource>create</resource>
+                <auth>staff,admin</auth>
+            </method>
+        </method>
+    </methods>
+</manifest>
