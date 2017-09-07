@@ -2,6 +2,7 @@
 
 
 function create(){
+    $owner_user_id = checkAuth();
     if (!empty($_FILES)) {
         $validator = Validator::getInstance();
         $file_data = $validator->ValidateAllByMask($_FILES['userfile'], 'fileUploadMask');
@@ -23,7 +24,7 @@ function create(){
         if (upload($_FILES['userfile']['tmp_name'],$fullpath)) {
             $id = md5_file($fullpath);
             $controller = Config::get('controller_url');
-            $response = sendRequest("$controller/create?id=$id&file=$fullpath",'GET',null,null);
+            $response = sendRequest("$controller/create?id=$id&file=$fullpath&user=$owner_user_id",'GET',null,null);
             switch ($response['status']){
                 case 'error': echo $response['message'];break;
                 case 'ok': echo $response['id'];break;
