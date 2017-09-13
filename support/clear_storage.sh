@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-cd /home/nick/cmsium/sandbox
+cd /home/git/sandbox/origin/master
 php support/clear_storage.php
