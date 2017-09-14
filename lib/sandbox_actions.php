@@ -4,8 +4,6 @@
 function create(){
     $owner_user_id = checkAuth();
     //$owner_user_id = 'eeec1e618690fba21fd416df610da961';
-    echo json_encode(["status" => "error", "message" => "name: {$_FILES['userfile']['name']}"]);
-    exit;
     if (!empty($_FILES)) {
         $validator = Validator::getInstance();
         $file_data = $validator->ValidateAllByMask($_FILES['userfile'], 'fileUploadMask');
@@ -13,6 +11,8 @@ function create(){
             echo json_encode(["status" => "error", "message" => "Wrong file format"]);
             return;
         }
+        echo json_encode(["status" => "error", "message" => "name: {$file_data['name']}"]);
+        exit;
         if (!checkMime($_FILES['userfile']['tmp_name'])) {
             echo json_encode(["status" => "error", "message" => "Wrong file type"]);
             return;
