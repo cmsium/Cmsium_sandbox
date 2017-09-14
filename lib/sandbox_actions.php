@@ -22,12 +22,10 @@ function create(){
         }
         $path = ROOTDIR."/".STORAGE;
         $fullpath = "$path/".$validator->transliterate(unicode_decode($_FILES['userfile']['name']));
-        var_dump($fullpath);
-        exit;
         if (upload($_FILES['userfile']['tmp_name'],$fullpath)) {
             $id = md5_file($fullpath);
             $controller = Config::get('controller_url');
-            $response = sendRequest("$controller/create?id=$id&file=$fullpath&user=$owner_user_id",'GET',null,null);
+            $response = sendRequest("$controller/create?id=$id&file=".urlencode($fullpath)."&user=$owner_user_id",'GET',null,null);
             switch ($response['status']){
                 case 'error': echo $response['message'];break;
                 case 'ok': echo $response['id'];break;
