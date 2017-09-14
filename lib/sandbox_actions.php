@@ -22,6 +22,8 @@ function create(){
         }
         $path = ROOTDIR."/".STORAGE;
         $fullpath = "$path/".$validator->transliterate(unicode_decode($_FILES['userfile']['name']));
+        var_dump($fullpath);
+        exit;
         if (upload($_FILES['userfile']['tmp_name'],$fullpath)) {
             $id = md5_file($fullpath);
             $controller = Config::get('controller_url');
@@ -65,6 +67,10 @@ function copyFile($server,$path,$file_id){
             exit;
         case 'ok':
             $file_path = $response['path'];
+            break;
+        default:
+            echo json_encode(["status" => "error", "message" => $path]);
+            exit;
     }
     unlink($path);
     echo  json_encode(["status" => "ok", "file_path" => $file_path]);
