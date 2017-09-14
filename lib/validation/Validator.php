@@ -312,5 +312,20 @@ class Validator {
         }
         return $mask[$type]['func'];
     }
+
+    public function transliterate($string) {
+        $string = mb_strtolower($string);
+        $mask = TRANSLIT_MASK;
+        $result = '';
+        $string_arr = preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY);
+        foreach ($string_arr as $char) {
+            if (isset($mask[$char])) {
+                $result .= $mask[$char];
+            } else {
+                $result .= $char;
+            }
+        }
+        return $result;
+    }
 }
 ?>
