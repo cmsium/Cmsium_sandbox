@@ -83,7 +83,7 @@ function testFileForm(){
     echo "
 <html>
     <body>
-        <form action='http://$server/create' method='post' enctype=\"multipart/form-data\">
+        <form action='http://$server/create' method='post' enctype=\"multipart/form-data\" accept-charset='UTF-8'>
             <input type='file' name='userfile'>
             <input type='submit'>
         </form>
