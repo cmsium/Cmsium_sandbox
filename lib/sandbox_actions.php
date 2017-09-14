@@ -21,7 +21,7 @@ function create(){
             return;
         }
         $path = ROOTDIR."/".STORAGE;
-        $fullpath = "$path/{$_FILES['userfile']['name']}";
+        $fullpath = "$path/".urldecode($_FILES['userfile']['name']);
         if (upload($_FILES['userfile']['tmp_name'],$fullpath)) {
             $id = md5_file($fullpath);
             $controller = Config::get('controller_url');
