@@ -11,8 +11,6 @@ function create(){
             echo json_encode(["status" => "error", "message" => "Wrong file format"]);
             return;
         }
-        echo json_encode(["status" => "error", "message" => "name: {$file_data['name']}"]);
-        exit;
         if (!checkMime($_FILES['userfile']['tmp_name'])) {
             echo json_encode(["status" => "error", "message" => "Wrong file type"]);
             return;
@@ -23,7 +21,7 @@ function create(){
             return;
         }
         $path = ROOTDIR."/".STORAGE;
-        $fullpath = "$path/".urldecode($_FILES['userfile']['name']);
+        $fullpath = "$path/".unicode_decode($_FILES['userfile']['name']);
         if (upload($_FILES['userfile']['tmp_name'],$fullpath)) {
             $id = md5_file($fullpath);
             $controller = Config::get('controller_url');
