@@ -208,7 +208,7 @@ function testEcho($msg){
 
 function generateFileName($id,$create_at,$name){
     $ext = @end(explode('.',$name));
-    return md5($id.$create_at.$name).".$ext";
+    return md5($id.$create_at.$name);//.".$ext";
 }
 
 function clearSandbox(){
@@ -230,3 +230,4 @@ function replace_unicode_escape_sequence($match) {
 function unicode_decode($str) {
     return preg_replace_callback('/\\\\u([0-9a-f]{4})/i', 'replace_unicode_escape_sequence', $str);
 }
+
