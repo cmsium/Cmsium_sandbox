@@ -13,5 +13,6 @@
     <schema id="7" parent="1" name="performance_schema"/>
     <schema id="8" parent="1" name="service"/>
     <schema id="9" parent="1" name="sys"/>
+    <schema id="10" parent="1" name="connection_test"/>
   </database-model>
 </dataSource>

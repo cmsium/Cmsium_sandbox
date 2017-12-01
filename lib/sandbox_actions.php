@@ -59,7 +59,13 @@ function createInSandbox(){
                         $header->respondLocation(['value'=>$url]);
                     } else
                         echo json_encode(["status" => "ok", "id" => $response['id']]);break;
-                default:var_dump($response);
+                default:
+                    if ($redirect_uri){
+                        $header = HeadersController::getInstance();
+                        $url = "$redirect_uri?message=$response";
+                        $header->respondLocation(['value'=>$url]);
+                    } else
+                        var_dump($response);
             }
         } else {
             if ($redirect_uri){
