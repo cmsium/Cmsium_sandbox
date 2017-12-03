@@ -13,7 +13,7 @@ define("ROOTDIR", dirname(__DIR__));
 define("SETTINGS_PATH", ROOTDIR."/config/config.ini");
 define("STORAGE",'storage');
 define("CHUNK_SIZE",1000000);
-define ("FILES_ALLOWED_TYPES",['jpg','jpeg','png','pdf','doc','docx','txt']);
+define ("FILES_ALLOWED_TYPES",['jpg','jpeg','png','pdf','doc','docx','txt','diff']);
 define ("ALLOWED_FILE_MIME_TYPES",['image/jpg','image/jpeg','image/png','application/pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/msword','text/plain']);
 define('MAX_FILE_UPLOAD_SIZE', 100000000);
 define('SANDBOX_STORE_TIME',3600);
