@@ -88,7 +88,7 @@ function create(){
             echo json_encode(["status" => "error", "message" => "Wrong file format"]);
             return;
         }
-        if (!checkMime($_FILES['userfile']['tmp_name'])) {
+        if (!checkMime($_FILES['userfile']['tmp_name'],end(explode('.',$_FILES['userfile']['name'])))) {
             echo json_encode(["status" => "error", "message" => "Wrong file type"]);
             return;
         }
