@@ -85,7 +85,7 @@ function create(){
         $validator = Validator::getInstance();
         $file_data = $validator->ValidateAllByMask($_FILES['userfile'], 'fileUploadMask');
         if ($file_data === false) {
-            echo json_encode(["status" => "error", "message" => "Wrong file format"]);
+            echo json_encode(["status" => "error", "message" => "Wrong file format: {$_FILES['userfile']['name']}"]);
             return;
         }
         if (!checkMime($_FILES['userfile']['tmp_name'],end(explode('.',$_FILES['userfile']['name'])))) {
