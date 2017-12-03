@@ -13,10 +13,10 @@ function createInSandbox(){
         if ($file_data === false) {
             if ($redirect_uri){
                 $header = HeadersController::getInstance();
-                $url = "$redirect_uri?message=Wrong file format";
+                $url = "$redirect_uri?message=Wrong file format: {$_FILES['userfile']['name']}";
                 $header->respondLocation(['value'=>$url]);
             } else
-                echo json_encode(["status" => "error", "message" => "Wrong file format"]);
+                echo json_encode(["status" => "error", "message" => "Wrong file format: {$_FILES['userfile']['name']}"]);
             return;
         }
         if (!checkMime($_FILES['userfile']['tmp_name'])) {
