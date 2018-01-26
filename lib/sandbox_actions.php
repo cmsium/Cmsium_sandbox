@@ -44,34 +44,12 @@ function createInSandbox(){
             $id = md5_file($fullpath);
             $controller = Config::get('controller_url');
             $response = sendRequest("$controller/registerSandboxFile?id=$id&file=$fullpath&user=$owner_user_id",'GET',null,null);
-            //TODO no json
-            switch ($response['status']){
-                case 'error':
-                    if ($redirect_uri){
-                        $header = HeadersController::getInstance();
-                        $url = "$redirect_uri?message={$response['message']}";
-                        $header->respondLocation(['value'=>$url]);
-                    } else
-                        echo json_encode(["status" => "error", "message" => $response['message']]);
-                    break;
-                case 'ok':
-                    if ($redirect_uri){
-                        $header = HeadersController::getInstance();
-                        $url = "$redirect_uri";
-                        $header->respondLocation(['value'=>$url]);
-                        throwException(FILE_CREATE_SUCCESS);
-                    } else
-                        echo $response;
-                    break;
-                default:
-                    if ($redirect_uri){
-                        $header = HeadersController::getInstance();
-                        $url = "$redirect_uri";
-                        $header->respondLocation(['value'=>$url]);
-                        throwException(CONNECTION_ERROR);
-                    } else
-                       throwException(CONNECTION_ERROR);
-            }
+            if ($redirect_uri){
+                $header = HeadersController::getInstance();
+                $header->respondLocation(['value'=>$redirect_uri]);
+                throwException(FILE_CREATE_SUCCESS);
+            } else
+                echo $response;
         } else {
             if ($redirect_uri){
                 $header = HeadersController::getInstance();
@@ -93,25 +71,20 @@ function create(){
         if ($file_data === false) {
             throwException(DATA_FORMAT_ERROR);
         }
-        if (!checkMime($_FILES['userfile']['tmp_name'],end(explode('.',$_FILES['userfile']['name'])))) {
+        if (!checkMime($_FILES['userfile']['tmp_name'], end(explode('.', $_FILES['userfile']['name'])))) {
             throwException(WRONG_FILE_TYPE);
         }
         $size = filesize($_FILES['userfile']['tmp_name']);
         if (($file_data["size"] > MAX_FILE_UPLOAD_SIZE) or ($size > MAX_FILE_UPLOAD_SIZE)) {
             throwException(TOO_LARGE_FILE);
         }
-        $path = ROOTDIR."/".STORAGE;
-        $fullpath = "$path/".$validator->transliterate(unicode_decode($_FILES['userfile']['name']));
-        if (upload($_FILES['userfile']['tmp_name'],$fullpath)) {
+        $path = ROOTDIR . "/" . STORAGE;
+        $fullpath = "$path/" . $validator->transliterate(unicode_decode($_FILES['userfile']['name']));
+        if (upload($_FILES['userfile']['tmp_name'], $fullpath)) {
             $id = md5_file($fullpath);
             $controller = Config::get('controller_url');
-            $response = sendRequest("$controller/create?id=$id&file=$fullpath&user=$owner_user_id",'GET',null,null);
-            //TODO no json
-            switch ($response['status']){
-                case 'error': echo json_encode(["status" => "error", "message" => $response['message']]);break;
-                case 'ok': echo $response;break;
-                default:throwException(CONNECTION_ERROR);
-            }
+            $response = sendRequest("$controller/create?id=$id&file=$fullpath&user=$owner_user_id", 'GET', null, null);
+            echo $response;
         } else {
             throwException(FILE_CREATE_ERROR);
         }
@@ -149,19 +122,9 @@ function copyFile($server,$path,$file_id){
     $created_at = date('Y-m-d H:i:s');
     $file_name = generateFileName($file_id,$created_at,$name);
     $response = SendFile($server."/createFile?file_name=$file_name",$path,$name);
-    //TODO no json
-    switch ($response['status']){
-        case 'error':
-            echo json_encode(["status" => "error", "message" => $response['message']]);
-            exit;
-        case 'ok':
-            $file_path = $response['path'];
-            break;
-        default:
-            throwException(CONNECTION_ERROR);
-    }
+    $file_path = $response;
     unlink($path);
-    echo  $file_path;
+    echo $file_path;
     return;
 }
 
