@@ -12,29 +12,20 @@ function createInSandbox(){
         $file_data = $validator->ValidateAllByMask($_FILES['userfile'], 'fileUploadMask');
         if ($file_data === false) {
             if ($redirect_uri){
-                $header = HeadersController::getInstance();
-                $url = "$redirect_uri";
-                $header->respondLocation(['value'=>$url]);
-                throwException(DATA_FORMAT_ERROR);
+                throwException(DATA_FORMAT_ERROR,$redirect_uri);
             } else
                 throwException(DATA_FORMAT_ERROR);
         }
         if (!checkMime($_FILES['userfile']['tmp_name'],end(explode('.',$_FILES['userfile']['name'])))) {
             if ($redirect_uri){
-                $header = HeadersController::getInstance();
-                $url = "$redirect_uri";
-                $header->respondLocation(['value'=>$url]);
-                throwException(WRONG_FILE_TYPE);
+                throwException(WRONG_FILE_TYPE,$redirect_uri);
             } else
                 throwException(WRONG_FILE_TYPE);
         }
         $size = filesize($_FILES['userfile']['tmp_name']);
         if (($file_data["size"] > MAX_FILE_UPLOAD_SIZE) or ($size > MAX_FILE_UPLOAD_SIZE)) {
             if ($redirect_uri){
-                $header = HeadersController::getInstance();
-                $url = "$redirect_uri";
-                $header->respondLocation(['value'=>$url]);
-                throwException(TOO_LARGE_FILE);
+                throwException(TOO_LARGE_FILE,$redirect_uri);
             } else
                 throwException(TOO_LARGE_FILE);
         }
@@ -45,17 +36,12 @@ function createInSandbox(){
             $controller = Config::get('controller_url');
             $response = sendRequest("$controller/registerSandboxFile?id=$id&file=$fullpath&user=$owner_user_id",'GET',null,null);
             if ($redirect_uri){
-                $header = HeadersController::getInstance();
-                $header->respondLocation(['value'=>$redirect_uri]);
-                throwException(FILE_CREATE_SUCCESS);
+                throwException(FILE_CREATE_SUCCESS,$redirect_uri);
             } else
                 echo $response;
         } else {
             if ($redirect_uri){
-                $header = HeadersController::getInstance();
-                $url = "$redirect_uri";
-                $header->respondLocation(['value'=>$url]);
-                throwException(FILE_CREATE_ERROR);
+                throwException(FILE_CREATE_ERROR,$redirect_uri);
             } else
                 throwException(FILE_CREATE_ERROR);
         }
@@ -83,8 +69,9 @@ function create(){
         if (upload($_FILES['userfile']['tmp_name'], $fullpath)) {
             $id = md5_file($fullpath);
             $controller = Config::get('controller_url');
-            $response = sendRequest("$controller/create?id=$id&file=$fullpath&user=$owner_user_id", 'GET', null, null);
-            echo $response;
+            //$response = sendRequest("$controller/create?id=$id&file=$fullpath&user=$owner_user_id", 'GET', null, null);
+            //echo $response;
+            echo "asdasd";
         } else {
             throwException(FILE_CREATE_ERROR);
         }
@@ -105,6 +92,7 @@ function getFile($path,$name){
 }
 
 function copyFile($server,$path,$file_id){
+
     $validator = Validator::getInstance();
     $file_id = $validator->Check('Md5Type',$file_id,[]);
     if ($file_id === false){
@@ -123,7 +111,6 @@ function copyFile($server,$path,$file_id){
     $file_name = generateFileName($file_id,$created_at,$name);
     $response = SendFile($server."/createFile?file_name=$file_name",$path,$name);
     $file_path = $response;
-    unlink($path);
     echo $file_path;
     return;
 }

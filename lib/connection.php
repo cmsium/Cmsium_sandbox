@@ -19,16 +19,32 @@ function sendRequestJSON($URL,$method,$header,$content){
     return json_decode($content,true);
 }
 
-
-function sendFile($URL,$file_path,$file_name){
+function sendFile($file_path,$file_name,$callback=null){
+    $URL = $this->url;
     $mime = mime_content_type($file_path);
     $server = "http://$URL";
     $curl = curl_init($server);
+    curl_setopt($curl, CURLOPT_HEADER, true);
     curl_setopt($curl, CURLOPT_POST, true);
     $data = ['userfile' => curl_file_create($file_path,$mime,$file_name)];
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    return json_decode(curl_exec($curl),true);
+    $response = curl_exec($curl);
+    $response = parseResponse($response);
+    if ($code = getHeaderValue($response['headers'], 'App-Exception')) {
+       throwExceptionByCode($code);
+    }
+    return $response['body'];
+}
+
+function parseResponse($response_string){
+    $exp = explode("\r\n\r",$response_string);
+    $headers = explode(PHP_EOL,$exp[1]);
+    array_shift($headers);
+    array_shift($headers);
+    if (isset($exp[2]))
+        $body = $exp[2];
+    return ["headers"=>$headers, "body"=>$body];
 }
 
 function checkAuth(){
@@ -60,8 +76,12 @@ function checkAuth(){
     */
 }
 
-function throwException (array $exception){
+function throwException (array $exception,$redirect_uri = null){
     header("App-Exception: {$exception['code']}");
+    if ($redirect_uri){
+        $header = HeadersController::getInstance();
+        $header->respondLocation(['value'=>"$redirect_uri?err={$exception['code']}"]);
+    }
     ob_clean();
     exit();
 }
