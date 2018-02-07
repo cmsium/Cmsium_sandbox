@@ -19,8 +19,7 @@ function sendRequestJSON($URL,$method,$header,$content){
     return json_decode($content,true);
 }
 
-function sendFile($file_path,$file_name,$callback=null){
-    $URL = $this->url;
+function sendFile($URL,$file_path,$file_name,$callback=null){
     $mime = mime_content_type($file_path);
     $server = "http://$URL";
     $curl = curl_init($server);
@@ -43,7 +42,7 @@ function parseResponse($response_string){
     array_shift($headers);
     array_shift($headers);
     if (isset($exp[2]))
-        $body = $exp[2];
+        $body = trim($exp[2]);
     return ["headers"=>$headers, "body"=>$body];
 }
 

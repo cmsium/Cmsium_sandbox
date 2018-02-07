@@ -69,9 +69,8 @@ function create(){
         if (upload($_FILES['userfile']['tmp_name'], $fullpath)) {
             $id = md5_file($fullpath);
             $controller = Config::get('controller_url');
-            //$response = sendRequest("$controller/create?id=$id&file=$fullpath&user=$owner_user_id", 'GET', null, null);
-            //echo $response;
-            echo "asdasd";
+            $response = sendRequest("$controller/create?id=$id&file=$fullpath&user=$owner_user_id", 'GET', null, null);
+            echo $response;
         } else {
             throwException(FILE_CREATE_ERROR);
         }
