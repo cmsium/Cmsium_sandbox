@@ -30,3 +30,5 @@ define('TRANSLIT_MASK', [
     's' => 's', 't' => 't', 'u' => 'u', 'v' => 'v', 'w' => 'w', 'x' => 'x', 'y' => 'y', 'z' => 'z', ' ' => '_',
     '_' => '_', '(' => '(', ')' => ')'
 ]);
+
+//Github test comment
